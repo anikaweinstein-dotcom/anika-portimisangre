@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Club del Donante · Por ti mi Sangre</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap">
+<style>
+:root{--rojo:#E3120B;--bg:#F3F3F3;--card:#FFFFFF;--soft:#F6F2F2;--line:#E7E1E1;--fg:#403E3E;--muted:#6B6565;--tag:#8E0A07;--negro:#1B1B1B;
+  --font:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:16px;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{text-wrap:balance;margin:0}
+.hero{background:var(--rojo);color:#fff;border-radius:22px;padding:36px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+.hero h1{font-weight:800;font-size:clamp(30px,6vw,48px);line-height:1.05}
+.hero p{margin:0;max-width:620px;font-size:17px}
+.pill{display:inline-block;background:#fff;color:var(--rojo);font-weight:800;border-radius:999px;padding:6px 16px;font-size:15px}
+.como{background:var(--card);border:2px solid var(--rojo);border-radius:16px;padding:18px 22px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.como b,.como .lbl{color:var(--rojo)}
+.como .lbl{font-weight:800;font-size:15px}
+.como p{margin:0;flex:1;min-width:220px}
+.sec-h{display:flex;flex-direction:column;gap:6px}
+.sec-h h2{font-weight:800;font-size:clamp(24px,4.5vw,34px);line-height:1.1}
+.sec-h h2::before{content:"";display:block;width:52px;height:6px;border-radius:3px;background:var(--rojo);margin-bottom:12px}
+.sec-h p{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.dcto{align-self:flex-start;background:var(--rojo);color:#fff;font-weight:800;font-size:22px;border-radius:10px;padding:3px 12px}
+.dcto.pend{background:var(--soft);color:var(--muted);font-size:16px}
+.card h3{font-size:20px;font-weight:800;margin-top:4px}
+.rubro{margin:0;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--tag)}
+.desc{margin:0;font-size:15px}
+.deal{margin:0;font-size:15px;background:var(--soft);border-radius:10px;padding:10px 12px}
+.deal b{color:var(--rojo)}
+.bottom{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding-top:4px}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;font-weight:800;font-size:14px;text-decoration:none;border-radius:999px;padding:8px 14px;border:2px solid var(--rojo);color:var(--rojo);background:transparent;font-family:inherit;cursor:pointer}
+.btn.lleno{background:var(--rojo);color:#fff}
+.btn:hover,.btn:focus-visible{text-decoration:underline;outline:none}
+.btn:focus-visible{box-shadow:0 0 0 3px #F7B8B5}
+.contact{border-top:1px dashed var(--line);padding-top:10px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.contact .who{font-weight:700}
+.contact .row{color:var(--muted);overflow-wrap:anywhere}
+.contact .v{color:var(--fg);user-select:all;font-variant-numeric:tabular-nums}
+.nota{margin:0;text-align:center;font-size:13px;color:var(--muted)}
+.candado{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center}
+.candado p{margin:0;flex:1;min-width:220px}
+.candado form{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.candado input{font-family:inherit;font-size:22px;font-weight:800;letter-spacing:.4em;width:7.2em;text-align:center;padding:8px 6px 8px 14px;border:2px solid var(--line);border-radius:12px;background:var(--bg);color:var(--fg)}
+.candado input:focus{outline:none;border-color:var(--rojo)}
+.msg{width:100%;margin:0;font-size:14px;font-weight:700;color:var(--rojo);min-height:1.2em}
+.candado.ok{border-color:var(--rojo)}
+.formas{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.forma{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:8px}
+.forma .top{display:flex;align-items:center;gap:12px}
+.n{flex:0 0 42px;height:42px;border-radius:50%;background:var(--rojo);color:#fff;font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center}
+.para{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--tag)}
+.forma h3{font-size:19px;font-weight:800}
+.forma p{margin:0;font-size:15px}
+.forma .btn{align-self:flex-start;margin-top:auto}
+.benef{background:var(--negro);color:#fff;border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;gap:8px}
+.benef ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px 28px}
+.benef li{font-weight:800;font-size:17px}
+.benef li::before{content:"✓";display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:2px solid #FF4B4B;color:#FF4B4B;border-radius:50%;font-size:13px;margin-right:10px}
+.benef p{margin:0;font-size:14px;color:#DDD}
+.cta{background:var(--rojo);color:#fff;border-radius:16px;padding:26px 16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.cta h3{font-weight:800;font-size:clamp(22px,4vw,30px)}
+.cta p{margin:0}
+.cta .mail{background:#fff;color:var(--rojo);font-weight:800;border-radius:999px;padding:10px 18px;user-select:all;font-size:clamp(13px,3.6vw,16px);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.cta .btn{border-color:#fff;color:#fff}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>Club del Donante</h1>
+    <p>Si donas sangre con Por ti mi Sangre, eres parte del Club. Estas marcas aliadas te agradecen con descuentos especiales.</p>
+    <span class="pill">22 marcas aliadas</span>
+  </header>
+
+  <div class="como">
+    <span class="lbl">¿Cómo uso mi descuento?</span>
+    <p>Al comprar o reservar, di que <b>vienes de parte del Club del Donante de Por ti mi Sangre</b>. ¡Así de fácil!</p>
+  </div>
+
+  <section class="sec-h">
+    <h2>Marcas aliadas</h2>
+    <p>Ordenadas de mayor a menor descuento.</p>
+  </section>
+
+  <div class="candado" id="candado">
+    <p id="candado-txt"><b>¿Eres del equipo de Por ti mi Sangre?</b> Ingresa el PIN para ver el contacto de cada marca (nombre, WhatsApp y correo).</p>
+    <form id="pin-form" autocomplete="off">
+      <label for="pin" class="sr" style="position:absolute;left:-9999px">PIN</label>
+      <input id="pin" name="pin" inputmode="numeric" pattern="[0-9]*" maxlength="3" placeholder="•••" aria-label="PIN de 3 números">
+      <button class="btn lleno" type="submit">Ver contactos</button>
+    </form>
+    <p class="msg" id="msg" role="status"></p>
+  </div>
+
+  <div class="grid" id="marcas"></div>
+  <p class="nota">Los descuentos los da cada marca y pueden tener condiciones o fecha de vencimiento: consúltalas al comprar o reservar.</p>
+
+  <section class="sec-h">
+    <h2>Formas de sumarte</h2>
+    <p>Hay muchas maneras de ayudar a que el Hemobus siga salvando vidas.</p>
+  </section>
+  <div class="formas">
+    <div class="forma">
+      <div class="top"><span class="n">1</span><span class="para">Para todos</span></div>
+      <h3>Dona sangre</h3>
+      <p>Toma unos 30 minutos y puede salvar hasta 3 vidas. Al donar, ya eres parte del Club del Donante y tienes todos estos descuentos.</p>
+      <a class="btn" href="https://portimisangre.org.pe/sumate-donante-voluntario/" target="_blank" rel="noopener">Quiero donar sangre →</a>
+    </div>
+    <div class="forma">
+      <div class="top"><span class="n">2</span><span class="para">Personas y empresas</span></div>
+      <h3>Dona dinero</h3>
+      <p>Una donación única o mensual, desde S/ 1. Las empresas también pueden patrocinar una ruta del Hemobus y reciben un reporte de impacto: campañas, km recorridos y vidas salvadas.</p>
+      <a class="btn" href="https://portimisangre.org.pe/dona/" target="_blank" rel="noopener">Quiero donar →</a>
+    </div>
+    <div class="forma">
+      <div class="top"><span class="n">3</span><span class="para">Para marcas</span></div>
+      <h3>Producto Solidario</h3>
+      <p>Eliges un producto de tu carta o catálogo y, por cada venta, un porcentaje va a la causa.</p>
+    </div>
+    <div class="forma">
+      <div class="top"><span class="n">4</span><span class="para">Para marcas</span></div>
+      <h3>Da un descuento al Club</h3>
+      <p>Ofrece un % de descuento a los donantes y aparece en esta página como marca aliada del Club del Donante.</p>
+    </div>
+  </div>
+  <div class="benef">
+    <ul><li>Certificado de donación</li><li>Beneficio tributario</li></ul>
+    <p>Somos entidad perceptora de donaciones ante SUNAT.</p>
+  </div>
+  <div class="cta">
+    <h3>¿Quieres que tu marca sea parte?</h3>
+    <p>Escríbenos por DM o a nuestro correo:</p>
+    <span class="mail">alianzas@portimisangre.org.pe</span>
+    <a class="btn" href="https://www.instagram.com/portimisangre.pe" target="_blank" rel="noopener">DM a @portimisangre.pe</a>
+  </div>
+</div>
+
+<script>
+// Parte pública. Los contactos (dueños, WhatsApp, correos) NO están aquí:
+// se piden a /api/contactos con el PIN y viven en Vercel, no en GitHub.
+var MARCAS = [
+  {id:"ann", d:"50%", n:"Ann Iconic", r:"Asesoría", desc:"Servicio express de asesoría.", deal:"<b>50% de descuento</b> en su asesoría express: de S/ 250 a S/ 125.", ig:"https://www.instagram.com/ann_iconic"},
+  {id:"camilash", d:"25%", n:"Camilash.pe", r:"Pestañas y cejas", desc:"Extensiones y lifting de pestañas, laminado de cejas y cursos personalizados para aprender estas técnicas.", deal:"<b>25%</b> en cualquier servicio y <b>30%</b> en sus cursos.", ig:"https://www.instagram.com/camilash.pe"},
+  {id:"ohjala", d:"25%", n:"Oh jala", r:"Panadería", desc:"Jalá dulce y salada, nuditos, bagels, French toasts, dips y más.", deal:"<b>25% de descuento</b> en toda la tienda.", web:"https://www.ohjala.pe", ig:"https://www.instagram.com/ohjala"},
+  {id:"cara", d:"25%", n:"Cara", r:"Skin care", desc:"Centro de cuidado de la piel.", deal:"<b>25% de descuento.</b>"},
+  {id:"kauza", d:"20%", n:"Kauza Cocina Peruana", r:"Restaurante", desc:"Especialistas en causas y comida peruana. Av. Los Conquistadores 1266, San Isidro.", deal:"<b>20% de descuento</b> de lunes a viernes, en el local de San Isidro.", web:"https://kauza.com.pe"},
+  {id:"pechufree", d:"20%", n:"Pechufree", r:"Postres sin gluten", desc:"Postres y panadería 100% gluten free, con opciones keto: tortas, brownies, galletas y más.", deal:"<b>20% de descuento</b> en todos los productos: en tienda, web y delivery.", ig:"https://www.instagram.com/pechufree_peru"},
+  {id:"luma", d:"20%", n:"Luma Café", r:"Cafetería", desc:"Cafetería en Lima.", deal:"<b>20% de descuento</b> en todos los productos: en tienda, web y delivery.", ig:"https://www.instagram.com/lumacafeperu"},
+  {id:"bodina", d:"20%", n:"Bodina", r:"Velas artesanales", desc:"Velas de cera de soya hechas a mano, decorativas y aromáticas. Pedidos por Instagram.", deal:"<b>20% de descuento</b> en todos los productos.", ig:"https://www.instagram.com/bodina.pe"},
+  {id:"sara", d:"20%", n:"Sara Núñez Makeup", r:"Maquillaje y peinado", desc:"Maquillaje y peinado para novias, quinceañeras, graduaciones y eventos. Con cita previa.", deal:"<b>20% de descuento</b> en todos los servicios.", ig:"https://www.instagram.com/saranunezmakeup_"},
+  {id:"powernature", d:"20%", n:"Power Nature Perú", r:"Alimentación saludable · 9 marcas", desc:"Lakanto, Sprout Living, Zolli, Oleico, Rip Van, Explore Cuisine, Yellowbird, Zana y Huma: endulzantes sin azúcar, proteínas vegetales, pastas de legumbres, snacks y más.", deal:"<b>20% de descuento</b> en estas 9 marcas.", web:"https://powernature.pe", ig:"https://www.instagram.com/powernatureperu"},
+  {id:"rosalia", d:"15%", n:"Rosalia.fotografa", r:"Fotografía", desc:"Sesiones en estudio y exterior, y cobertura de eventos: cumpleaños, bautismos, bodas y más.", deal:"<b>15% de descuento</b> en sus servicios de fotografía.", ig:"https://www.instagram.com/rosalia.fotografa"},
+  {id:"adapta", d:"15%", n:"Adapta", r:"Arquitectura de interiores", desc:"Adapta casas y espacios según las necesidades de cada persona.", deal:"<b>15% de descuento</b> en proyectos de arquitectura.", ig:"https://www.instagram.com/adapta.pe"},
+  {id:"dmyrian", d:"Hasta 15%", n:"D'Myrian", r:"Pastelería kosher", desc:"Pastelería y panadería sin lactosa, con productos kosher y catering: quiches, burekas, challah, tortas y más.", deal:"<b>Hasta 15% de descuento.</b>"},
+  {id:"valeria", d:"S/ 600", n:"Psicóloga Valeria Campodónico", r:"Psicología", desc:"Atención psicológica.", deal:"<b>Paquete de 5 sesiones por S/ 600.</b>"}
+];
+var PENDIENTES = [
+  {id:"florayfauna", d:"Por definir", pend:true, n:"Flora y Fauna", r:"Aceptó sumarse", desc:"Ya aceptó ser aliada; falta definir su descuento.", deal:"Descuento <b>por definir</b>."}
+];
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function wa(t){return "https://wa.me/"+String(t).replace(/\D/g,"");}
+function pintar(contactos){
+  var lista = contactos ? MARCAS.concat(PENDIENTES) : MARCAS;
+  document.getElementById("marcas").innerHTML = lista.map(function(m){
+    var c = contactos && contactos[m.id] || [];
+    var links = (c[0] ? '<a class="btn lleno" href="'+wa(c[0].tel)+'" target="_blank" rel="noopener">WhatsApp</a>' : '')+
+      (m.web?'<a class="btn" href="'+m.web+'" target="_blank" rel="noopener">Web</a>':'')+
+      (m.ig?'<a class="btn" href="'+m.ig+'" target="_blank" rel="noopener">Instagram</a>':'');
+    var cs = c.map(function(x){
+      return '<div class="who">'+esc(x.q)+'</div><div class="row">WhatsApp: <span class="v">'+esc(x.tel)+'</span></div>'+
+        (x.mail?'<div class="row">Correo: <span class="v">'+esc(x.mail)+'</span></div>':'');
+    }).join("");
+    return '<article class="card"><span class="dcto'+(m.pend?' pend':'')+'">'+esc(m.d)+'</span>'+
+      '<h3>'+esc(m.n)+'</h3><p class="rubro">'+esc(m.r)+'</p><p class="desc">'+esc(m.desc)+'</p>'+
+      '<p class="deal">'+m.deal+'</p><div class="bottom">'+(cs?'<div class="contact">'+cs+'</div>':'')+
+      (links?'<div class="links">'+links+'</div>':'')+'</div></article>';
+  }).join("");
+}
+pintar(null);
+
+var form = document.getElementById("pin-form"), msg = document.getElementById("msg"), input = document.getElementById("pin");
+function abrir(pin, silencioso){
+  msg.textContent = silencioso ? "" : "Revisando…";
+  return fetch("/api/contactos", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({pin:pin})})
+    .then(function(r){ if(!r.ok) throw r.status; return r.json(); })
+    .then(function(data){
+      pintar(data.contactos);
+      try{ sessionStorage.setItem("club-pin", pin); }catch(e){}
+      document.getElementById("candado").classList.add("ok");
+      document.getElementById("candado-txt").innerHTML = "<b>Contactos desbloqueados.</b> Ya puedes ver el nombre, WhatsApp y correo de cada marca.";
+      form.hidden = true; msg.textContent = "";
+    })
+    .catch(function(e){
+      try{ sessionStorage.removeItem("club-pin"); }catch(x){}
+      msg.textContent = silencioso ? "" : (e === 401 ? "PIN incorrecto. Prueba otra vez." : "No se pudo revisar el PIN. Revisa tu conexión y prueba otra vez.");
+    });
+}
+form.addEventListener("submit", function(ev){
+  ev.preventDefault();
+  var pin = input.value.trim();
+  if(!/^\d{3}$/.test(pin)){ msg.textContent = "El PIN tiene 3 números."; return; }
+  abrir(pin, false);
+});
+try{ var guardado = sessionStorage.getItem("club-pin"); if(guardado) abrir(guardado, true); }catch(e){}
+</script>
+</body>
+</html>
