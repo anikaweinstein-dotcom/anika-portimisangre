@@ -1,0 +1,8 @@
+{
+  "name": "anika-portimisangre",
+  "private": true,
+  "description": "Página de avances y Club del Donante. Sin build: archivos estáticos + funciones en /api.",
+  "dependencies": {
+    "@vercel/blob": "2.8.2"
+  }
+}

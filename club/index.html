@@ -83,13 +83,20 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .grupo .gnota{margin:0;font-size:15px;color:var(--muted)}
 .tareas{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
 .tarea{display:flex;gap:12px;align-items:flex-start;background:var(--soft);border-radius:12px;padding:12px 14px}
-.tarea .box{flex:0 0 22px;height:22px;border:2px solid var(--rojo);border-radius:6px;margin-top:2px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800}
-.tarea.hecho .box{background:var(--rojo)}
-.tarea.hecho .tm{text-decoration:line-through;opacity:.6}
-.tarea .tm{flex:1;min-width:0}
+.tarea input[type=checkbox]{flex:0 0 22px;width:22px;height:22px;margin:2px 0 0;accent-color:var(--rojo);cursor:pointer}
+.tarea .tm{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
 .tarea .tm b{display:block}
-.tarea .tm span{font-size:14px;color:var(--muted)}
-.tarea .est{font-size:12px;font-weight:800;color:var(--tag);white-space:nowrap;margin-top:3px}
+.tarea .tm .q{font-size:14px;color:var(--muted)}
+.tarea.hecho b,.tarea.hecho .q{text-decoration:line-through;opacity:.6}
+.tarea .est{font-family:inherit;font-size:14px;font-weight:700;color:var(--tag);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 10px;width:100%}
+.tarea .est:focus{outline:none;border-color:var(--rojo)}
+.tarea .quitar{flex:0 0 auto;font-family:inherit;font-size:12px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;padding:4px;text-decoration:underline}
+.tarea .quitar.seguro{color:var(--rojo)}
+.agregar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.agregar input{font-family:inherit;font-size:15px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:var(--card);color:var(--fg);flex:1 1 180px;min-width:0}
+.agregar input:focus{outline:none;border-color:var(--rojo)}
+.guardado{margin:0;font-size:13px;font-weight:700;color:var(--muted);min-height:1.2em}
+.guardado.error{color:var(--rojo)}
 .mensaje{border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
 .mensaje h3{font-size:17px;font-weight:800}
 .mensaje .ay{margin:0;font-size:14px;color:var(--muted)}
@@ -214,29 +221,78 @@ function pintar(contactos){
 }
 pintar(null);
 
-// Pendientes del equipo: llegan del servidor solo con el PIN.
+// Pendientes del equipo: llegan del servidor solo con el PIN. Las tareas se pueden marcar,
+// cambiar de estado, agregar y quitar; se guardan en /api/tareas (espacio privado de Vercel).
+var PIN = "", MENSAJES = [], TAREAS = null;
 function pintarPendientes(p){
+  MENSAJES = (p && p.mensajes) || [];
+  cambiar({op:"leer"});
+}
+function fechaHora(iso){
+  var d = new Date(iso); if(isNaN(d)) return "";
+  return d.toLocaleDateString("es-PE",{day:"numeric",month:"long"})+" a las "+d.toLocaleTimeString("es-PE",{hour:"2-digit",minute:"2-digit"});
+}
+function aviso(txt, error){
+  var a = document.getElementById("guardado"); if(!a) return;
+  a.textContent = txt; a.className = "guardado"+(error?" error":"");
+}
+function cambiar(datos){
+  datos.pin = PIN;
+  if(datos.op !== "leer") aviso("Guardando…");
+  return fetch("/api/tareas",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(datos)})
+    .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw j; return j; }); })
+    .then(function(doc){ TAREAS = doc; dibujarTareas(); aviso(datos.op === "leer" ? "" : "Guardado ✓"); })
+    .catch(function(e){ aviso((e && e.error) || "No se pudo guardar. Revisa tu conexión y prueba otra vez.", true); if(TAREAS) dibujarTareas(); });
+}
+function dibujarTareas(){
   var el = document.getElementById("equipo");
-  if(!p || !p.grupos){ el.hidden = true; return; }
+  if(!TAREAS){ el.hidden = true; return; }
   var html = '<span class="eti">Solo equipo</span><div class="sec-h"><h2>Pendientes del equipo</h2></div>'+
-    (p.actualizado ? '<p class="act">Actualizado el '+esc(p.actualizado)+'</p>' : '');
-  html += p.grupos.map(function(g){
+    '<p class="act">Marca lo que ya hiciste y escribe cómo va cada una. Se guarda solo y lo ve todo el equipo.'+
+    (TAREAS.actualizado ? ' Último cambio: '+esc(fechaHora(TAREAS.actualizado))+'.' : '')+'</p>'+
+    '<p class="guardado" id="guardado" role="status"></p>';
+  html += TAREAS.grupos.map(function(g){
     return '<div class="grupo"><h3>'+esc(g.titulo)+(g.pedido?'<span class="ped">'+esc(g.pedido)+'</span>':'')+'</h3>'+
       (g.nota?'<p class="gnota">'+esc(g.nota)+'</p>':'')+
-      '<ul class="tareas">'+(g.items||[]).map(function(t){
-        var hecho = /hecho|listo/i.test(t.estado||"");
-        return '<li class="tarea'+(hecho?' hecho':'')+'"><span class="box">'+(hecho?'✓':'')+'</span>'+
-          '<div class="tm"><b>'+esc(t.marca)+'</b><span>'+esc(t.que)+'</span></div>'+
-          '<span class="est">'+esc(t.estado||"")+'</span></li>';
-      }).join("")+'</ul></div>';
+      '<ul class="tareas">'+g.items.map(function(t){
+        var tid = g.id+"-"+t.id;
+        return '<li class="tarea'+(t.hecho?' hecho':'')+'" data-g="'+esc(g.id)+'" data-t="'+esc(t.id)+'">'+
+          '<input type="checkbox" id="chk-'+esc(tid)+'" data-accion="marcar"'+(t.hecho?' checked':'')+' aria-label="Hecho: '+esc(t.marca)+'">'+
+          '<div class="tm"><label for="chk-'+esc(tid)+'"><b>'+esc(t.marca)+'</b></label>'+(t.que?'<span class="q">'+esc(t.que)+'</span>':'')+
+          '<input class="est" id="est-'+esc(tid)+'" data-accion="estado" maxlength="140" value="'+esc(t.estado||"")+'" placeholder="¿Cómo va? (ej: le escribí, falta que conteste)" aria-label="Cómo va: '+esc(t.marca)+'"></div>'+
+          '<button class="quitar" type="button" data-accion="quitar">Quitar</button></li>';
+      }).join("")+'</ul>'+
+      '<form class="agregar" data-g="'+esc(g.id)+'"><input name="marca" id="nueva-'+esc(g.id)+'" maxlength="80" placeholder="Nueva tarea: ¿a quién contactar?" aria-label="Nueva tarea">'+
+      '<input name="que" id="que-'+esc(g.id)+'" maxlength="240" placeholder="¿Para qué? (opcional)" aria-label="Para qué"><button class="btn" type="submit">+ Agregar</button></form></div>';
   }).join("");
-  html += (p.mensajes||[]).map(function(m, i){
+  html += MENSAJES.map(function(m, i){
     return '<div class="mensaje"><h3>'+esc(m.titulo)+'</h3>'+(m.ayuda?'<p class="ay">'+esc(m.ayuda)+'</p>':'')+
       '<pre id="msj-'+i+'">'+esc(m.texto)+'</pre><button class="btn lleno" type="button" data-copiar="msj-'+i+'">Copiar mensaje</button></div>';
   }).join("");
   el.innerHTML = html;
   el.hidden = false;
 }
+var equipo = document.getElementById("equipo");
+equipo.addEventListener("change", function(ev){
+  var li = ev.target.closest(".tarea"); if(!li) return;
+  var a = ev.target.getAttribute("data-accion"), base = {grupo:li.getAttribute("data-g"), id:li.getAttribute("data-t")};
+  if(a === "marcar"){ li.classList.toggle("hecho", ev.target.checked); base.op = "marcar"; base.hecho = ev.target.checked; cambiar(base); }
+  if(a === "estado"){ base.op = "estado"; base.estado = ev.target.value; cambiar(base); }
+});
+equipo.addEventListener("keydown", function(ev){
+  if(ev.key === "Enter" && ev.target.getAttribute("data-accion") === "estado"){ ev.preventDefault(); ev.target.blur(); }
+});
+equipo.addEventListener("click", function(ev){
+  var b = ev.target.closest('[data-accion="quitar"]'); if(!b) return;
+  if(!b.classList.contains("seguro")){ b.classList.add("seguro"); b.textContent = "¿Seguro? Toca otra vez"; setTimeout(function(){ b.classList.remove("seguro"); b.textContent = "Quitar"; }, 4000); return; }
+  var li = b.closest(".tarea"); cambiar({op:"quitar", grupo:li.getAttribute("data-g"), id:li.getAttribute("data-t")});
+});
+equipo.addEventListener("submit", function(ev){
+  var f = ev.target.closest(".agregar"); if(!f) return;
+  ev.preventDefault();
+  var marca = f.marca.value.trim(); if(!marca){ aviso("Escribe a quién hay que contactar.", true); f.marca.focus(); return; }
+  cambiar({op:"agregar", grupo:f.getAttribute("data-g"), marca:marca, que:f.que.value.trim()});
+});
 document.addEventListener("click", function(ev){
   var b = ev.target.closest("[data-copiar]"); if(!b) return;
   var pre = document.getElementById(b.getAttribute("data-copiar"));
@@ -251,6 +307,7 @@ function abrir(pin, silencioso){
   return fetch("/api/contactos", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({pin:pin})})
     .then(function(r){ if(!r.ok) throw r.status; return r.json(); })
     .then(function(data){
+      PIN = pin;
       pintar(data.contactos);
       pintarPendientes(data.pendientes);
       try{ sessionStorage.setItem("club-pin", pin); }catch(e){}
