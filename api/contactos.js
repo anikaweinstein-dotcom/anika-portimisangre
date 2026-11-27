@@ -19,8 +19,10 @@ module.exports = async function (req, res) {
     res.statusCode = 401;
     return res.end(JSON.stringify({ error: "PIN incorrecto" }));
   }
-  var contactos = {};
+  var contactos = {}, pendientes = null;
   try { contactos = JSON.parse(process.env.CLUB_CONTACTOS || "{}"); } catch (e) {}
+  // Pendientes del equipo (tareas y mensajes): variable CLUB_PENDIENTES (JSON) en Vercel.
+  try { pendientes = JSON.parse(process.env.CLUB_PENDIENTES || "null"); } catch (e) {}
   res.statusCode = 200;
-  res.end(JSON.stringify({ contactos: contactos }));
+  res.end(JSON.stringify({ contactos: contactos, pendientes: pendientes }));
 };

@@ -73,6 +73,28 @@ h1,h2,h3{text-wrap:balance;margin:0}
 .cta p{margin:0}
 .cta .mail{background:#fff;color:var(--rojo);font-weight:800;border-radius:999px;padding:10px 18px;user-select:all;font-size:clamp(13px,3.6vw,16px);white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
 .cta .btn{border-color:#fff;color:#fff}
+.equipo{background:var(--card);border:2px solid var(--rojo);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:20px}
+.equipo .eti{align-self:flex-start;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#fff;background:var(--rojo);border-radius:999px;padding:4px 12px}
+.equipo h2{font-weight:800;font-size:clamp(22px,4vw,30px)}
+.equipo .act{margin:0;color:var(--muted);font-size:14px}
+.grupo{display:flex;flex-direction:column;gap:10px}
+.grupo h3{font-size:19px;font-weight:800;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.grupo .ped{font-size:12px;font-weight:800;color:var(--tag);background:var(--soft);border-radius:999px;padding:3px 10px}
+.grupo .gnota{margin:0;font-size:15px;color:var(--muted)}
+.tareas{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.tarea{display:flex;gap:12px;align-items:flex-start;background:var(--soft);border-radius:12px;padding:12px 14px}
+.tarea .box{flex:0 0 22px;height:22px;border:2px solid var(--rojo);border-radius:6px;margin-top:2px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800}
+.tarea.hecho .box{background:var(--rojo)}
+.tarea.hecho .tm{text-decoration:line-through;opacity:.6}
+.tarea .tm{flex:1;min-width:0}
+.tarea .tm b{display:block}
+.tarea .tm span{font-size:14px;color:var(--muted)}
+.tarea .est{font-size:12px;font-weight:800;color:var(--tag);white-space:nowrap;margin-top:3px}
+.mensaje{border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.mensaje h3{font-size:17px;font-weight:800}
+.mensaje .ay{margin:0;font-size:14px;color:var(--muted)}
+.mensaje pre{margin:0;white-space:pre-wrap;font-family:inherit;font-size:15px;background:var(--soft);border-radius:10px;padding:14px;user-select:all;overflow-wrap:anywhere}
+.mensaje .btn{align-self:flex-start}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -103,6 +125,8 @@ h1,h2,h3{text-wrap:balance;margin:0}
     </form>
     <p class="msg" id="msg" role="status"></p>
   </div>
+
+  <section class="equipo" id="equipo" hidden></section>
 
   <div class="grid" id="marcas"></div>
   <p class="nota">Los descuentos los da cada marca y pueden tener condiciones o fecha de vencimiento: consúltalas al comprar o reservar.</p>
@@ -190,6 +214,37 @@ function pintar(contactos){
 }
 pintar(null);
 
+// Pendientes del equipo: llegan del servidor solo con el PIN.
+function pintarPendientes(p){
+  var el = document.getElementById("equipo");
+  if(!p || !p.grupos){ el.hidden = true; return; }
+  var html = '<span class="eti">Solo equipo</span><div class="sec-h"><h2>Pendientes del equipo</h2></div>'+
+    (p.actualizado ? '<p class="act">Actualizado el '+esc(p.actualizado)+'</p>' : '');
+  html += p.grupos.map(function(g){
+    return '<div class="grupo"><h3>'+esc(g.titulo)+(g.pedido?'<span class="ped">'+esc(g.pedido)+'</span>':'')+'</h3>'+
+      (g.nota?'<p class="gnota">'+esc(g.nota)+'</p>':'')+
+      '<ul class="tareas">'+(g.items||[]).map(function(t){
+        var hecho = /hecho|listo/i.test(t.estado||"");
+        return '<li class="tarea'+(hecho?' hecho':'')+'"><span class="box">'+(hecho?'✓':'')+'</span>'+
+          '<div class="tm"><b>'+esc(t.marca)+'</b><span>'+esc(t.que)+'</span></div>'+
+          '<span class="est">'+esc(t.estado||"")+'</span></li>';
+      }).join("")+'</ul></div>';
+  }).join("");
+  html += (p.mensajes||[]).map(function(m, i){
+    return '<div class="mensaje"><h3>'+esc(m.titulo)+'</h3>'+(m.ayuda?'<p class="ay">'+esc(m.ayuda)+'</p>':'')+
+      '<pre id="msj-'+i+'">'+esc(m.texto)+'</pre><button class="btn lleno" type="button" data-copiar="msj-'+i+'">Copiar mensaje</button></div>';
+  }).join("");
+  el.innerHTML = html;
+  el.hidden = false;
+}
+document.addEventListener("click", function(ev){
+  var b = ev.target.closest("[data-copiar]"); if(!b) return;
+  var pre = document.getElementById(b.getAttribute("data-copiar"));
+  var listo = function(){ b.textContent = "¡Copiado!"; setTimeout(function(){ b.textContent = "Copiar mensaje"; }, 2000); };
+  var aMano = function(){ var r = document.createRange(); r.selectNodeContents(pre); var s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Texto seleccionado: cópialo"; };
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(pre.textContent).then(listo, aMano); } else { aMano(); }
+});
+
 var form = document.getElementById("pin-form"), msg = document.getElementById("msg"), input = document.getElementById("pin");
 function abrir(pin, silencioso){
   msg.textContent = silencioso ? "" : "Revisando…";
@@ -197,6 +252,7 @@ function abrir(pin, silencioso){
     .then(function(r){ if(!r.ok) throw r.status; return r.json(); })
     .then(function(data){
       pintar(data.contactos);
+      pintarPendientes(data.pendientes);
       try{ sessionStorage.setItem("club-pin", pin); }catch(e){}
       document.getElementById("candado").classList.add("ok");
       document.getElementById("candado-txt").innerHTML = "<b>Contactos desbloqueados.</b> Ya puedes ver el nombre, WhatsApp y correo de cada marca.";
