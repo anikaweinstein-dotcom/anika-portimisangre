@@ -249,7 +249,7 @@ function dibujarTareas(){
   if(!TAREAS){ el.hidden = true; return; }
   var html = '<span class="eti">Solo equipo</span><div class="sec-h"><h2>Pendientes del equipo</h2></div>'+
     '<p class="act">Marca lo que ya hiciste y escribe cómo va cada una. Se guarda solo y lo ve todo el equipo.'+
-    (TAREAS.actualizado ? ' Último cambio: '+esc(fechaHora(TAREAS.actualizado))+'.' : '')+'</p>'+
+    (TAREAS.actualizado ? ' Último cambio: '+esc(fechaHora(TAREAS.actualizado)) : '')+'</p>'+
     '<p class="guardado" id="guardado" role="status"></p>';
   html += TAREAS.grupos.map(function(g){
     return '<div class="grupo"><h3>'+esc(g.titulo)+(g.pedido?'<span class="ped">'+esc(g.pedido)+'</span>':'')+'</h3>'+
